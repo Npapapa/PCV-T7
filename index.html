@@ -53,6 +53,12 @@
       color: #028c2f;
       font-weight: bold;
     }
+    .error {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #d32f2f;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -61,26 +67,48 @@
     <p class="gift-box">Nhấn nút bên dưới để nhận quà ngẫu nhiên!</p>
     <button id="getGiftBtn">Nhận Quà</button>
     <div class="result" id="result"></div>
+    <div class="error" id="error"></div>
   </div>
 
   <script>
-    // Danh sách quà tặng
+    // Danh sách quà tặng và số lượng
     const gifts = [
-      "Lược trải lông",
-      "Đồ chơi",
-      "1 gói pate",
-      "2 thanh creamy treats"
+      { name: "Lược trải lông", quantity: 2 },
+      { name: "Đồ chơi", quantity: 4 },
+      { name: "1 gói pate", quantity: 10 },
+      { name: "2 thanh creamy treats", quantity: 40 }
     ];
 
-    // Xử lý sự kiện nhấn nút
+    // Hàm xử lý sự kiện khi nhấn nút
     document.getElementById('getGiftBtn').addEventListener('click', function() {
-      // Random quà từ danh sách
-      const randomIndex = Math.floor(Math.random() * gifts.length);
-      const selectedGift = gifts[randomIndex];
+      const resultDiv = document.getElementById('result');
+      const errorDiv = document.getElementById('error');
+
+      // Reset thông báo
+      resultDiv.textContent = '';
+      errorDiv.textContent = '';
+
+      // Lọc các quà còn lại (số lượng > 0)
+      const availableGifts = gifts.filter(gift => gift.quantity > 0);
+
+      // Nếu không còn quà nào, thông báo hết quà
+      if (availableGifts.length === 0) {
+        errorDiv.textContent = "Xin lỗi, tất cả quà đã được phát hết!";
+        return;
+      }
+
+      // Random quà từ danh sách quà còn lại
+      const randomIndex = Math.floor(Math.random() * availableGifts.length);
+      const selectedGift = availableGifts[randomIndex];
+
+      // Giảm số lượng quà
+      selectedGift.quantity--;
 
       // Hiển thị kết quả
-      const resultDiv = document.getElementById('result');
-      resultDiv.textContent = `Chúc mừng! Bạn nhận được: ${selectedGift}`;
+      resultDiv.textContent = `Chúc mừng! Bạn nhận được: ${selectedGift.name}`;
+
+      // Hiển thị số lượng còn lại trong console (tùy chọn)
+      console.log("Số lượng quà còn lại:", gifts);
     });
   </script>
 </body>
